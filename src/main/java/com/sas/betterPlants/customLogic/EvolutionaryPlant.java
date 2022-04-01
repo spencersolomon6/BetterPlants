@@ -1,8 +1,12 @@
 package com.sas.betterPlants.customLogic;
 
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+
+import java.util.Properties;
 import java.util.Random;
 
-public class EvolutionaryPlant {
+public abstract class EvolutionaryPlant extends CropBlock {
 
     private double growthRate;
     private double dropRate;
@@ -10,17 +14,20 @@ public class EvolutionaryPlant {
 
     private final Random rand;
 
-    public EvolutionaryPlant() {
+    public EvolutionaryPlant(Properties properties) {
+        super(properties);
         this.rand = new Random();
         init();
     }
 
-    public EvolutionaryPlant(int seed) {
+    public EvolutionaryPlant(Properties properties, int seed) {
+        super(properties);
         this.rand = new Random(seed);
         init();
     }
 
-    public EvolutionaryPlant(double growthRate, double dropRate, ENVIRONMENT preferredEnvironment, Random rand) {
+    public EvolutionaryPlant(Properties properties, double growthRate, double dropRate, ENVIRONMENT preferredEnvironment, Random rand) {
+        super(properties);
         this.rand = rand;
 
         this.growthRate = growthRate;
@@ -34,9 +41,7 @@ public class EvolutionaryPlant {
         this.preferredEnvironment = ENVIRONMENT.values()[rand.nextInt(ENVIRONMENT.values().length)];
     }
 
-    public static EvolutionaryPlant breed(EvolutionaryPlant parent1, EvolutionaryPlant parent2) {
-        EvolutionaryPlant child = new EvolutionaryPlant();
-
+    public static EvolutionaryPlant breed(EvolutionaryPlant parent1, EvolutionaryPlant parent2, EvolutionaryPlant child) {
         double parentGrowthRate = (parent1.growthRate + parent2.growthRate) / 3;
         double parentDropRate = (parent1.dropRate + parent2.dropRate) / 3;
         ENVIRONMENT parentEnvironment = parent1.preferredEnvironment.equals(parent2.preferredEnvironment) ? parent1.preferredEnvironment : child.preferredEnvironment;
